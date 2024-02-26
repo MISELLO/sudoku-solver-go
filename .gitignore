@@ -1,0 +1,5 @@
+# We ignore the lint checker script
+check.sh
+
+# And also any generated executable files
+*.exe
