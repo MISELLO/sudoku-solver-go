@@ -8,7 +8,7 @@ check:
 .PHONY: check
 
 build: check
-	go build -o sudoku-solver.exe main.go
+	go build -o sudoku-solver.exe main.go input.go output.go
 .PHONY: build
 
 run: build
