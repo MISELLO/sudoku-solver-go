@@ -8,7 +8,7 @@ var w string = "Working!"
 // avl[1-9]: Each position represents if that number is possible on that cell
 type tCell struct {
 	num uint8
-	avl [9]bool
+	avl [10]bool
 }
 
 // tBoard represents all 81 cells of the board
