@@ -2,8 +2,6 @@ package main
 
 import (
 	"os"
-	"unicode"
-	"unicode/utf8"
 )
 
 // GetInput checks several forms of input in order to get the input from the user
@@ -24,6 +22,7 @@ func GetInput() (string, bool) {
 		}
 	} else {
 		result = ""
+		errMsg = "No arguments on program call"
 		error = true
 	}
 	return result, error
@@ -37,15 +36,20 @@ func weHaveArgs() bool {
 // firstArgIsValid returns true if the first argument is a valid input
 func firstArgIsValid() bool {
 	s := os.Args[1]
-	if len(s) == 81 {
-		for i, w := 0, 0; i < 81; i += w {
-			rune, width := utf8.DecodeRuneInString(s[i:])
-			if !unicode.IsDigit(rune) {
-				return false
-			}
-			w = width
-		}
-		return true // All are valid digits
+	count := len(s)
+	if count > 81 {
+		errMsg = "Argument length is too long"
+		return false
 	}
-	return false
+	if count < 81 {
+		errMsg = "Argument length is too short"
+		return false
+	}
+	for i := 0; i < count; i++ {
+		if s[i] < '0' || s[i] > '9' {
+			errMsg = "Digit \"" + string(s[i]) + "\" not recognized"
+			return false
+		}
+	}
+	return true // All are valid digits
 }

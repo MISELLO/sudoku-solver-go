@@ -13,21 +13,27 @@ func PrintUsage() {
 
 // PrintSudoku prints a representation o a sudoku on the screen
 func PrintSudoku(s string) {
+	fmt.Println()
 	for i := 0; i < len(s); i++ {
 		if i != 0 && i%9 == 0 {
 			fmt.Println()
 		} else if i%9 != 0 && i%3 == 0 {
-			fmt.Print("|")
+			fmt.Print(" |")
 		}
 		if i != 0 && i%27 == 0 {
-			fmt.Println("---+---+---")
+			fmt.Println("-------+-------+-------")
 		}
 
 		if s[i:i+1] != "0" {
-			fmt.Print(s[i : i+1])
+			fmt.Print(" ", s[i:i+1])
 		} else {
-			fmt.Print(" ")
+			fmt.Print("  ")
 		}
 	}
 	fmt.Println()
+}
+
+// PrintErrMsg prints the error message declared on main.go and updated on input.go
+func PrintErrMsg() {
+	fmt.Println(errMsg)
 }
