@@ -15,8 +15,9 @@ func main() {
 		PrintErrMsg()
 		PrintUsage()
 	} else {
-		solver.Load(s)
-		s = solver.Unload()
+		board := solver.Load(s)
+		solver.Solve(&board)
+		s = solver.Unload(&board)
 		PrintSudoku(s)
 	}
 }
