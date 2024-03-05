@@ -12,7 +12,7 @@ build: check
 .PHONY: build
 
 run: build
-	./sudoku-solver.exe
+	./sudoku-solver.exe 060070004008090760710406005007500326000903000346007500600308079073010200200050010
 .PHONY: run
 
 clean:
