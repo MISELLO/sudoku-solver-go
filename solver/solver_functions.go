@@ -11,12 +11,12 @@ func Load(s string) tBoard {
 	var board tBoard
 	for i := 0; i < len(s); i++ {
 		board[i].num = uint8(s[i] - '0')
-		makeAvailable(&board[i].avl, s[i])
+		makeAvailable(board[i].avl, s[i])
 	}
 	return board
 }
 
-func Unload(board *tBoard) string {
+func Unload(board tBoard) string {
 	var s string
 	for i := 0; i < len(board); i++ {
 		s += string(board[i].num + '0')
@@ -26,49 +26,56 @@ func Unload(board *tBoard) string {
 
 // makeAvailable sets the array of booleans to the proper values depending on what is placed
 // on the board cell.
-func makeAvailable(a *[10]bool, b byte) {
+func makeAvailable(a [10]bool, b byte) {
 	switch b {
 	case '0':
-		*a = [10]bool{false, true, true, true, true, true, true, true, true, true}
+		a = [10]bool{false, true, true, true, true, true, true, true, true, true}
 	case '1':
-		*a = [10]bool{true, true, false, false, false, false, false, false, false, false}
+		a = [10]bool{true, true, false, false, false, false, false, false, false, false}
 	case '2':
-		*a = [10]bool{true, false, true, false, false, false, false, false, false, false}
+		a = [10]bool{true, false, true, false, false, false, false, false, false, false}
 	case '3':
-		*a = [10]bool{true, false, false, true, false, false, false, false, false, false}
+		a = [10]bool{true, false, false, true, false, false, false, false, false, false}
 	case '4':
-		*a = [10]bool{true, false, false, false, true, false, false, false, false, false}
+		a = [10]bool{true, false, false, false, true, false, false, false, false, false}
 	case '5':
-		*a = [10]bool{true, false, false, false, false, true, false, false, false, false}
+		a = [10]bool{true, false, false, false, false, true, false, false, false, false}
 	case '6':
-		*a = [10]bool{true, false, false, false, false, false, true, false, false, false}
+		a = [10]bool{true, false, false, false, false, false, true, false, false, false}
 	case '7':
-		*a = [10]bool{true, false, false, false, false, false, false, true, false, false}
+		a = [10]bool{true, false, false, false, false, false, false, true, false, false}
 	case '8':
-		*a = [10]bool{true, false, false, false, false, false, false, false, true, false}
+		a = [10]bool{true, false, false, false, false, false, false, false, true, false}
 	case '9':
-		*a = [10]bool{true, false, false, false, false, false, false, false, false, true}
+		a = [10]bool{true, false, false, false, false, false, false, false, false, true}
 	}
 }
 
 // Solve tryes to solve the sudoku puzzle
-func Solve(board *tBoard) {
+func Solve(board tBoard) {
 	var changesDone bool = true
 	for changesDone {
 		changesDone = false
-		markRows(board)
+		for i, cell := range board {
+			if cell.num != 0 {
+				fmt.Println(i)
+				mark(cell.num, getRow(i, board))
+				mark(cell.num, getCol(i, board))
+				mark(cell.num, getBlk(i, board))
+			}
+		}
 		changesDone = setUnique(board)
 	}
 }
 
 // setUnique checks all cells where the number is not yet known and updates it if
 // there is only one number available left.
-func setUnique(board *tBoard) bool {
+func setUnique(board tBoard) bool {
 	var changesDone bool = false
-	for i := 0; i < len(*board); i++ {
-		if (*board)[i].num == 0 {
-			(*board)[i].num = whatNumber(board[i].avl)
-			if (*board)[i].num != 0 {
+	for i := 0; i < len(board); i++ {
+		if board[i].num == 0 {
+			board[i].num = whatNumber(board[i].avl)
+			if board[i].num != 0 {
 				changesDone = true
 			}
 		}
@@ -92,6 +99,26 @@ func whatNumber(a [10]bool) uint8 {
 }
 
 // markRows updates the numbers available for every row.
-func markRows(board *tBoard) {
-	return
+//func markRows(board *tBoard) {
+//	for i := 0; i < 9; i++ {
+//		markIndividualRow(i, board)
+//	}
+//}
+
+//func markIndividualRow(i int, board *tBoard) {
+//	row := getRow(i, board)
+//}
+
+func mark(n uint8, l []tCell) {
+
+}
+
+func getRow(i int, board tBoard) []tCell {
+	return nil
+}
+func getCol(i int, board tBoard) []tCell {
+	return nil
+}
+func getBlk(i int, board tBoard) []tCell {
+	return nil
 }
