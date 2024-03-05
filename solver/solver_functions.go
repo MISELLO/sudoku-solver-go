@@ -56,20 +56,24 @@ func Solve(board *tBoard) {
 	var changesDone bool = true
 	for changesDone {
 		changesDone = false
-		c := markRows(board)
-		changesDone = changesDone || c
-		setUnique(board)
+		markRows(board)
+		changesDone = setUnique(board)
 	}
 }
 
 // setUnique checks all cells where the number is not yet known and updates it if
 // there is only one number available left.
-func setUnique(board *tBoard) {
+func setUnique(board *tBoard) bool {
+	var changesDone bool = false
 	for i := 0; i < len(*board); i++ {
 		if (*board)[i].num == 0 {
 			(*board)[i].num = whatNumber(board[i].avl)
+			if (*board)[i].num != 0 {
+				changesDone = true
+			}
 		}
 	}
+	return changesDone
 }
 
 // whatNumber checks the array of booleans from indexes 1 to 9. If only one of
@@ -88,6 +92,6 @@ func whatNumber(a [10]bool) uint8 {
 }
 
 // markRows updates the numbers available for every row.
-func markRows(board *tBoard) bool {
-	return false
+func markRows(board *tBoard) {
+	return
 }
