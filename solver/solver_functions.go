@@ -65,6 +65,7 @@ func Solve(board *tBoard) {
 			}
 		}
 		changesDone = setUnique(board)
+		// TODO if !changesDone {all must have a x }
 	}
 }
 
@@ -159,4 +160,14 @@ func PrintAvailable(board tBoard) {
 			fmt.Println()
 		}
 	}
+}
+
+// GivenList returns an array of 81 bools that tells if a position
+// was given (true) or calculated (false)
+func GivenList(board tBoard) [81]bool {
+	var g [81]bool
+	for i, v := range board {
+		g[i] = v.avl[0]
+	}
+	return g
 }

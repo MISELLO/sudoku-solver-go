@@ -6,6 +6,8 @@ import (
 
 var errMsg string
 
+var colorsOn bool = true
+
 func main() {
 	solver.Print()
 
@@ -18,7 +20,7 @@ func main() {
 		board := solver.Load(s)
 		solver.Solve(&board)
 		s = solver.Unload(board)
-		PrintSudoku(s)
+		PrintSudoku(s, solver.GivenList(board))
 		//solver.PrintAvailable(board)
 	}
 }
