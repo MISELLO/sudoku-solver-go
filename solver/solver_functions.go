@@ -56,16 +56,29 @@ func Solve(board *tBoard) {
 	var changesDone bool = true
 	for changesDone {
 		changesDone = false
+
+		// First strategy: Remove the imposible.
+		// If one number candidate is left, this is the number.
 		for i, cell := range *board {
 			if cell.num != 0 {
 				//fmt.Println(i)
-				mark(board, cell.num, getRow(i))
-				mark(board, cell.num, getCol(i))
-				mark(board, cell.num, getBlk(i))
+				mark(board, cell.num, getRowPos(i))
+				mark(board, cell.num, getColPos(i))
+				mark(board, cell.num, getBlkPos(i))
 			}
 		}
 		changesDone = setUnique(board)
-		// TODO if !changesDone {all must have a x }
+
+		// Second strategy: Every row, column and block must have each number.
+		// If a number can only be placed in one spot, then this number must go to that spot.
+		if !changesDone && !IsSolved(*board) {
+			fmt.Println(" NEED MORE CHANGES")
+			for i := 0; i < 9; i++ {
+				setUniqueFromList(board, getRowNum(i), &changesDone)
+				setUniqueFromList(board, getColNum(i), &changesDone)
+				setUniqueFromList(board, getBlkNum(i), &changesDone)
+			}
+		}
 	}
 }
 
@@ -105,13 +118,12 @@ func whatNumber(a [10]bool) uint8 {
 func mark(b *tBoard, n uint8, l []int) {
 	for _, v := range l {
 		(*b)[v].avl[n] = false
-		//fmt.Println(" Marking number", n, "at position", v, "as false.")
 	}
 }
 
-// getRow returns the whole row (n) belongs
+// getRowPos returns the whole row (n) belongs
 // in the form of a list of tBoard indexes
-func getRow(n int) []int {
+func getRowPos(n int) []int {
 	var list []int
 	start, end := (n/9)*9, ((n/9)*9)+9
 	for i := start; i < end; i++ {
@@ -120,9 +132,20 @@ func getRow(n int) []int {
 	return list
 }
 
-// getCol returns the whole column (n) belongs
+// getRowNum returns the row number (n)
+// being (n) a number from 0 to 8
+func getRowNum(n int) []int {
+	var list []int
+	start, end := n*9, (n*9)+9
+	for i := start; i < end; i++ {
+		list = append(list, i)
+	}
+	return list
+}
+
+// getColPos returns the whole column (n) belongs
 // in the form of a list of tBoard indexes
-func getCol(n int) []int {
+func getColPos(n int) []int {
 	var list []int
 	start, end := n%9, 9*9
 	for i := start; i < end; i += 9 {
@@ -131,13 +154,36 @@ func getCol(n int) []int {
 	return list
 }
 
-// getBlk returns the whole block (n) belongs
+// getColNum returns the column number (n)
+// being (n) a number from 0 to 8
+func getColNum(n int) []int {
+	var list []int
+	for i := 0; i < 9; i++ {
+		list = append(list, n+(9*i))
+	}
+	return list
+}
+
+// getBlkPos returns the whole block (n) belongs
 // in the form of a list of tBoard indexes
-func getBlk(n int) []int {
+func getBlkPos(n int) []int {
 	var list []int
 	r1 := 9*(n/9-(n/9)%3) + (n%9 - n%3)
 	r2 := 9*(n/9-(n/9)%3) + (n%9 - n%3) + 9
 	r3 := 9*(n/9-(n/9)%3) + (n%9 - n%3) + 18
+	list = append(list, r1, r1+1, r1+2)
+	list = append(list, r2, r2+1, r2+2)
+	list = append(list, r3, r3+1, r3+2)
+	return list
+}
+
+// getBlkNum returns the block number (n)
+// being (n) a number from 0 to 8
+func getBlkNum(n int) []int {
+	var list []int
+	r1 := ((n % 3) * 3) + ((n / 3) * 27)
+	r2 := ((n % 3) * 3) + ((n / 3) * 27) + 9
+	r3 := ((n % 3) * 3) + ((n / 3) * 27) + 18
 	list = append(list, r1, r1+1, r1+2)
 	list = append(list, r2, r2+1, r2+2)
 	list = append(list, r3, r3+1, r3+2)
@@ -170,4 +216,62 @@ func GivenList(board tBoard) [81]bool {
 		g[i] = v.avl[0]
 	}
 	return g
+}
+
+// IsSolved returns true if the sudoku has been solved
+func IsSolved(board tBoard) bool {
+	for _, v := range board {
+		if v.num == 0 {
+			return false
+		}
+	}
+	return true
+}
+
+// setUniqueFromList checks that the given list (l) of indexes reference
+// all numbers from 1 to 9. If one number can only be in one place then
+// it is placed there and the check variable (c) is set to true.
+func setUniqueFromList(b *tBoard, l []int, c *bool) {
+	for _, i := range l {
+		if (*b)[i].num == 0 {
+			for n := 1; n <= 9; n++ {
+				if (*b)[i].avl[n] && !hasA(*b, uint8(n), l) && countAvailable(*b, uint8(n), l) == 1 {
+					set(b, i, uint8(n))
+					*c = true
+				}
+			}
+		}
+	}
+}
+
+// hasA returns true if the list of indexes (l) already reference
+// the number (x).
+func hasA(b tBoard, x uint8, l []int) bool {
+	for _, i := range l {
+		if b[i].num == x {
+			return true
+		}
+	}
+	return false
+}
+
+// countAvailable returns the number of indexes from the list (l) where
+// the board (b) accepts the given number (x).
+func countAvailable(b tBoard, x uint8, l []int) int {
+	var count int
+	for _, i := range l {
+		if b[i].avl[x] {
+			count++
+		}
+	}
+	return count
+}
+
+// set sets the number (x) on the position (i) from the board (b)
+func set(b *tBoard, i int, x uint8) {
+	(*b)[i].num = x
+	for j := 1; j <= 9; j++ {
+		(*b)[i].avl[j] = false
+	}
+	(*b)[i].avl[x] = true
 }
