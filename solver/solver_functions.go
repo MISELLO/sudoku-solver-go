@@ -1,11 +1,5 @@
 package solver
 
-import "fmt"
-
-func Print() {
-	fmt.Println(w)
-}
-
 // Load takes a valid string and it converts it to our sudoku structure
 func Load(s string) tBoard {
 	var board tBoard
@@ -61,7 +55,6 @@ func Solve(board *tBoard) {
 		// If one number candidate is left, this is the number.
 		for i, cell := range *board {
 			if cell.num != 0 {
-				//fmt.Println(i)
 				mark(board, cell.num, getRowPos(i))
 				mark(board, cell.num, getColPos(i))
 				mark(board, cell.num, getBlkPos(i))
@@ -72,7 +65,6 @@ func Solve(board *tBoard) {
 		// Second strategy: Every row, column and block must have each number.
 		// If a number can only be placed in one spot, then this number must go to that spot.
 		if !changesDone && !IsSolved(*board) {
-			fmt.Println(" NEED MORE CHANGES")
 			for i := 0; i < 9; i++ {
 				setUniqueFromList(board, getRowNum(i), &changesDone)
 				setUniqueFromList(board, getColNum(i), &changesDone)
@@ -191,6 +183,7 @@ func getBlkNum(n int) []int {
 }
 
 // PrintAvailable prints for each position the available numbers (test function)
+/*
 func PrintAvailable(board tBoard) {
 	fmt.Println()
 	for i, c := range board {
@@ -207,6 +200,7 @@ func PrintAvailable(board tBoard) {
 		}
 	}
 }
+*/
 
 // GivenList returns an array of 81 bools that tells if a position
 // was given (true) or calculated (false)

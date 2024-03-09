@@ -1,7 +1,5 @@
 package solver
 
-var w string = "Working!"
-
 // tCell represents the type of each cell of the board
 // num: The number to display on that cell
 // avl[0]: The first position is set to true if the number is known from the start
