@@ -46,7 +46,7 @@ func makeAvailable(a *[10]bool, b byte) {
 }
 
 // Solve tryes to solve the sudoku puzzle
-func Solve(board *tBoard) {
+func Solve(board *tBoard) tStats {
 	var changesDone bool = true
 	for changesDone {
 		changesDone = false
@@ -64,7 +64,7 @@ func Solve(board *tBoard) {
 
 		// Second strategy: Every row, column and block must have each number.
 		// If a number can only be placed in one spot, then this number must go to that spot.
-		if !changesDone && !IsSolved(*board) {
+		if !changesDone && !isSolved(*board) {
 			for i := 0; i < 9; i++ {
 				setUniqueFromList(board, getRowNum(i), &changesDone)
 				setUniqueFromList(board, getColNum(i), &changesDone)
@@ -72,6 +72,9 @@ func Solve(board *tBoard) {
 			}
 		}
 	}
+	var stats tStats
+	stats.solved = isSolved(*board)
+	return stats
 }
 
 // setUnique checks all cells where the number is not yet known and updates it if
@@ -212,8 +215,8 @@ func GivenList(board tBoard) [81]bool {
 	return g
 }
 
-// IsSolved returns true if the sudoku has been solved
-func IsSolved(board tBoard) bool {
+// isSolved returns true if the sudoku has been solved
+func isSolved(board tBoard) bool {
 	for _, v := range board {
 		if v.num == 0 {
 			return false
@@ -268,4 +271,9 @@ func set(b *tBoard, i int, x uint8) {
 		(*b)[i].avl[j] = false
 	}
 	(*b)[i].avl[x] = true
+}
+
+// IsSolved tStats method that returns true if the sudoku has been solved
+func (s *tStats) IsSolved() bool {
+	return s.solved
 }

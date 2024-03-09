@@ -11,3 +11,8 @@ type tCell struct {
 
 // tBoard represents all 81 cells of the board
 type tBoard [81]tCell
+
+// tStats is a type that contains result information
+type tStats struct {
+	solved bool
+}

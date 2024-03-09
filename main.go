@@ -16,8 +16,9 @@ func main() {
 		PrintUsage()
 	} else {
 		board := solver.Load(s)
-		solver.Solve(&board)
+		stats := solver.Solve(&board)
 		s = solver.Unload(board)
 		PrintSudoku(s, solver.GivenList(board))
+		PrintSolved(stats.IsSolved())
 	}
 }

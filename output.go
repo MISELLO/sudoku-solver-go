@@ -44,3 +44,13 @@ func PrintSudoku(s string, g [81]bool) {
 func PrintErrMsg() {
 	fmt.Println(errMsg)
 }
+
+// PrintSolved prints if the sudoku could be solved or not.
+func PrintSolved(s bool) {
+	fmt.Printf("\033[1m  Solved: \033[0m")
+	if s {
+		fmt.Printf("\033[42m YES \033[0m\n")
+	} else {
+		fmt.Printf("\033[41m NO \033[0m\n")
+	}
+}
