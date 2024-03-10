@@ -38,6 +38,7 @@ func PrintSudoku(s string, g [81]bool) {
 		}
 	}
 	fmt.Println()
+	fmt.Println()
 }
 
 // PrintErrMsg prints the error message declared on main.go and updated on input.go
@@ -47,10 +48,25 @@ func PrintErrMsg() {
 
 // PrintSolved prints if the sudoku could be solved or not.
 func PrintSolved(s bool) {
-	fmt.Printf("\033[1m  Solved: \033[0m")
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Up (11 times)
+	fmt.Printf("\033[11A")
+
+	// Right (25 times)
+	fmt.Printf("\033[25C")
+
+	// Print "Solved:" in bold
+	fmt.Printf("\033[1m Solved: \033[0m")
+
+	// Print YES in green background or NO in red background
 	if s {
 		fmt.Printf("\033[42m YES \033[0m\n")
 	} else {
 		fmt.Printf("\033[41m NO \033[0m\n")
 	}
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
 }
