@@ -48,8 +48,10 @@ func makeAvailable(a *[10]bool, b byte) {
 // Solve tryes to solve the sudoku puzzle
 func Solve(board *tBoard) tStats {
 	var changesDone bool = true
+	var iter int = 0
 	for changesDone {
 		changesDone = false
+		iter++
 
 		// First strategy: Remove the imposible.
 		// If one number candidate is left, this is the number.
@@ -74,6 +76,7 @@ func Solve(board *tBoard) tStats {
 	}
 	var stats tStats
 	stats.solved = isSolved(*board)
+	stats.iterations = iter
 	return stats
 }
 
@@ -276,4 +279,10 @@ func set(b *tBoard, i int, x uint8) {
 // IsSolved tStats method that returns true if the sudoku has been solved
 func (s *tStats) IsSolved() bool {
 	return s.solved
+}
+
+// NumIterations tStats method that returns the number of iterations done
+// in order to solve the sudoku
+func (s *tStats) NumIterations() int {
+	return s.iterations
 }

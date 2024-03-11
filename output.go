@@ -63,6 +63,7 @@ func PrintSolved(s bool) {
 	} else {
 		fmt.Printf(" Solved: ")
 	}
+	fmt.Printf("    ")
 
 	// Print YES in green background or NO in red background
 	if colorsOn {
@@ -78,6 +79,32 @@ func PrintSolved(s bool) {
 			fmt.Printf(" NO \n")
 		}
 	}
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
+}
+
+// PrintIterations prints the number of iterations done
+// in order to solve the sudoku
+func PrintIterations(n int) {
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Up (10 times)
+	fmt.Printf("\033[10A")
+
+	// Right (25 times)
+	fmt.Printf("\033[25C")
+
+	// Print "Iterations:" in bold
+	if colorsOn {
+		fmt.Printf("\033[1m Iterations: \033[0m")
+	} else {
+		fmt.Printf(" Iterations: ")
+	}
+
+	// Print the number of iterations
+	fmt.Printf("%d\n", n)
 
 	// Restore cursor position
 	fmt.Printf("\033[u")
