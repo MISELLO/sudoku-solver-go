@@ -58,13 +58,25 @@ func PrintSolved(s bool) {
 	fmt.Printf("\033[25C")
 
 	// Print "Solved:" in bold
-	fmt.Printf("\033[1m Solved: \033[0m")
+	if colorsOn {
+		fmt.Printf("\033[1m Solved: \033[0m")
+	} else {
+		fmt.Printf(" Solved: ")
+	}
 
 	// Print YES in green background or NO in red background
-	if s {
-		fmt.Printf("\033[42m YES \033[0m\n")
+	if colorsOn {
+		if s {
+			fmt.Printf("\033[42m YES \033[0m\n")
+		} else {
+			fmt.Printf("\033[41m NO \033[0m\n")
+		}
 	} else {
-		fmt.Printf("\033[41m NO \033[0m\n")
+		if s {
+			fmt.Printf(" YES \n")
+		} else {
+			fmt.Printf(" NO \n")
+		}
 	}
 
 	// Restore cursor position
