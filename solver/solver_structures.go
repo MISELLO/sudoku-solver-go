@@ -16,4 +16,5 @@ type tBoard [81]tCell
 type tStats struct {
 	solved     bool
 	iterations int
+	deduced    int
 }

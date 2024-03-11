@@ -21,5 +21,6 @@ func main() {
 		PrintSudoku(s, solver.GivenList(board))
 		PrintSolved(stats.IsSolved())
 		PrintIterations(stats.NumIterations())
+		PrintDeduced(stats.Deduced())
 	}
 }

@@ -109,3 +109,30 @@ func PrintIterations(n int) {
 	// Restore cursor position
 	fmt.Printf("\033[u")
 }
+
+// PrintDeduced prints the number of deductions done
+// in order to solve the sudoku
+func PrintDeduced(n int) {
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Up (9 times)
+	fmt.Printf("\033[9A")
+
+	// Right (25 times)
+	fmt.Printf("\033[25C")
+
+	// Print "Deduced:" in bold
+	if colorsOn {
+		fmt.Printf("\033[1m Deduced: \033[0m")
+	} else {
+		fmt.Printf(" Deduced: ")
+	}
+	fmt.Printf("   ")
+
+	// Print the number of deductions
+	fmt.Printf("%d\n", n)
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
+}

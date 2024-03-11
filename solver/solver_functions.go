@@ -47,6 +47,7 @@ func makeAvailable(a *[10]bool, b byte) {
 
 // Solve tryes to solve the sudoku puzzle
 func Solve(board *tBoard) tStats {
+	var stats tStats
 	var changesDone bool = true
 	var iter int = 0
 	for changesDone {
@@ -67,14 +68,16 @@ func Solve(board *tBoard) tStats {
 		// Second strategy: Every row, column and block must have each number.
 		// If a number can only be placed in one spot, then this number must go to that spot.
 		if !changesDone && !isSolved(*board) {
+			missingCount := countMissing(*board)
 			for i := 0; i < 9; i++ {
 				setUniqueFromList(board, getRowNum(i), &changesDone)
 				setUniqueFromList(board, getColNum(i), &changesDone)
 				setUniqueFromList(board, getBlkNum(i), &changesDone)
 			}
+			missingCount -= countMissing(*board)
+			stats.deduced += missingCount
 		}
 	}
-	var stats tStats
 	stats.solved = isSolved(*board)
 	stats.iterations = iter
 	return stats
@@ -285,4 +288,21 @@ func (s *tStats) IsSolved() bool {
 // in order to solve the sudoku
 func (s *tStats) NumIterations() int {
 	return s.iterations
+}
+
+// countMissing counts the number of incognitas remaining on the board
+func countMissing(b tBoard) int {
+	count := 0
+	for _, v := range b {
+		if v.num == 0 {
+			count++
+		}
+	}
+	return count
+}
+
+// Deduced tStats method that returns the number of iterations done
+// in order to solve the sudoku
+func (s *tStats) Deduced() int {
+	return s.deduced
 }
