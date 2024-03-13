@@ -84,14 +84,40 @@ func PrintSolved(s bool) {
 	fmt.Printf("\033[u")
 }
 
+// PrintNumSolutions prints the number of solutions found
+func PrintNumSolutions(n int) {
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Up (10 times)
+	fmt.Printf("\033[10A")
+
+	// Right (25 times)
+	fmt.Printf("\033[25C")
+
+	// Print "Solutions:" in bold
+	if colorsOn {
+		fmt.Printf("\033[1m Solutions: \033[0m")
+	} else {
+		fmt.Printf(" Solutions: ")
+	}
+	fmt.Printf(" ")
+
+	// Print the number of iterations
+	fmt.Printf("%d\n", n)
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
+}
+
 // PrintIterations prints the number of iterations done
 // in order to solve the sudoku
 func PrintIterations(n int) {
 	// Save cursor position
 	fmt.Printf("\033[s")
 
-	// Up (10 times)
-	fmt.Printf("\033[10A")
+	// Up (9 times)
+	fmt.Printf("\033[9A")
 
 	// Right (25 times)
 	fmt.Printf("\033[25C")
@@ -116,8 +142,8 @@ func PrintDeduced(n int) {
 	// Save cursor position
 	fmt.Printf("\033[s")
 
-	// Up (9 times)
-	fmt.Printf("\033[9A")
+	// Up (8 times)
+	fmt.Printf("\033[8A")
 
 	// Right (25 times)
 	fmt.Printf("\033[25C")

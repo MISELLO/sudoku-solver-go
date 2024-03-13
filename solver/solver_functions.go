@@ -79,6 +79,9 @@ func Solve(board *tBoard) tStats {
 		}
 	}
 	stats.solved = isSolved(*board)
+	if stats.solved {
+		stats.solutions = append(stats.solutions, Unload(*board))
+	}
 	stats.iterations = iter
 	return stats
 }
@@ -305,4 +308,9 @@ func countMissing(b tBoard) int {
 // in order to solve the sudoku
 func (s *tStats) Deduced() int {
 	return s.deduced
+}
+
+// NumSolutions tStats method that returns the number of solutions found
+func (s *tStats) NumSolutions() int {
+	return len(s.solutions)
 }
