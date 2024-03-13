@@ -15,7 +15,7 @@ func PrintUsage() {
 // s --> a string of 81 digits that represent the sudoku board
 // g --> an array where each position tells if that position
 // was given (true) or calculated (false)
-func PrintSudoku(s string, g [81]bool) {
+func PrintSudoku(s string, g [81]bool, w [81]bool) {
 	fmt.Println()
 	for i := 0; i < len(s); i++ {
 		if i != 0 && i%9 == 0 {
@@ -28,7 +28,9 @@ func PrintSudoku(s string, g [81]bool) {
 		}
 
 		if s[i:i+1] != "0" {
-			if colorsOn && g[i] {
+			if colorsOn && w[i] {
+				fmt.Print(" \033[41m\033[90m", s[i:i+1], "\033[0m")
+			} else if colorsOn && g[i] {
 				fmt.Print(" \033[90m", s[i:i+1], "\033[0m")
 			} else {
 				fmt.Print(" ", s[i:i+1])

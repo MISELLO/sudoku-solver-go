@@ -224,6 +224,45 @@ func GivenList(board tBoard) [81]bool {
 	return g
 }
 
+// TODO
+// Wrong returns an array of 81 bools that tells if a position
+// is wrong (repeated in a row, column or block)
+func Wrong(board tBoard) [81]bool {
+	var w [81]bool
+	for i, v := range board {
+
+		// If we don't know the value it can't be wrong
+		if v.num == 0 {
+			w[i] = false
+			continue
+		}
+
+		var count int
+		r := getRowPos(i)
+		c := getColPos(i)
+		b := getBlkPos(i)
+		for _, j := range r {
+			if v.num == board[j].num {
+				count++
+			}
+		}
+		for _, j := range c {
+			if v.num == board[j].num {
+				count++
+			}
+		}
+		for _, j := range b {
+			if v.num == board[j].num {
+				count++
+			}
+		}
+
+		// Number should appear 3 times (once per row, column and block)
+		w[i] = count != 3
+	}
+	return w
+}
+
 // isSolved returns true if the sudoku has been solved
 func isSolved(board tBoard) bool {
 	for _, v := range board {

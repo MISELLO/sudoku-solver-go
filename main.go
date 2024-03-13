@@ -18,7 +18,7 @@ func main() {
 		board := solver.Load(s)
 		stats := solver.Solve(&board)
 		s = solver.Unload(board)
-		PrintSudoku(s, solver.GivenList(board))
+		PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))
 		PrintSolved(stats.IsSolved())
 		PrintIterations(stats.NumIterations())
 		PrintNumSolutions(stats.NumSolutions())
