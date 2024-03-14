@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+	"flag"
 )
 
 // GetInput checks several forms of input in order to get the input from the user
@@ -14,7 +14,7 @@ func GetInput() (string, bool) {
 	var error bool
 	if weHaveArgs() {
 		if firstArgIsValid() {
-			result = os.Args[1]
+			result = flag.Arg(0)
 			error = false
 		} else {
 			result = ""
@@ -30,12 +30,12 @@ func GetInput() (string, bool) {
 
 // weHaveArgs returns true if the the program has been called with at least 1 argument
 func weHaveArgs() bool {
-	return len(os.Args) >= 2
+	return len(flag.Args()) >= 1
 }
 
 // firstArgIsValid returns true if the first argument is a valid input
 func firstArgIsValid() bool {
-	s := os.Args[1]
+	s := flag.Arg(0)
 	count := len(s)
 	if count > 81 {
 		errMsg = "Argument length is too long"
