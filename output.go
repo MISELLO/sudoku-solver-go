@@ -16,6 +16,27 @@ func PrintUsage() {
 // g --> an array where each position tells if that position
 // was given (true) or calculated (false)
 func PrintSudoku(s string, g [81]bool, w [81]bool) {
+	if strFmt {
+		printSudokuStringFormat(s, g, w)
+	} else {
+		printSudokuRegular(s, g, w)
+	}
+}
+
+func printSudokuStringFormat(s string, g [81]bool, w [81]bool) {
+	for i := 0; i < len(s); i++ {
+		if colorsOn && w[i] {
+			fmt.Print("\033[41m\033[90m", s[i:i+1], "\033[0m")
+		} else if colorsOn && g[i] {
+			fmt.Print("\033[90m", s[i:i+1], "\033[0m")
+		} else {
+			fmt.Print(s[i : i+1])
+		}
+	}
+	fmt.Println()
+}
+
+func printSudokuRegular(s string, g [81]bool, w [81]bool) {
 	fmt.Println()
 	for i := 0; i < len(s); i++ {
 		if i != 0 && i%9 == 0 {
@@ -50,6 +71,12 @@ func PrintErrMsg() {
 
 // PrintSolved prints if the sudoku could be solved or not.
 func PrintSolved(s bool) {
+
+	// String format enabled: We don't print anything else
+	if strFmt {
+		return
+	}
+
 	// Save cursor position
 	fmt.Printf("\033[s")
 
@@ -88,6 +115,12 @@ func PrintSolved(s bool) {
 
 // PrintNumSolutions prints the number of solutions found
 func PrintNumSolutions(n int) {
+
+	// String format enabled: We don't print anything else
+	if strFmt {
+		return
+	}
+
 	// Save cursor position
 	fmt.Printf("\033[s")
 
@@ -115,6 +148,12 @@ func PrintNumSolutions(n int) {
 // PrintIterations prints the number of iterations done
 // in order to solve the sudoku
 func PrintIterations(n int) {
+
+	// String format enabled: We don't print anything else
+	if strFmt {
+		return
+	}
+
 	// Save cursor position
 	fmt.Printf("\033[s")
 
@@ -141,6 +180,12 @@ func PrintIterations(n int) {
 // PrintDeduced prints the number of deductions done
 // in order to solve the sudoku
 func PrintDeduced(n int) {
+
+	// String format enabled: We don't print anything else
+	if strFmt {
+		return
+	}
+
 	// Save cursor position
 	fmt.Printf("\033[s")
 

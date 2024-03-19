@@ -10,17 +10,24 @@ var errMsg string
 
 var noFlagArgs []string
 
+// Flags
 var colorsOn bool = true
+var strFmt bool = false
 
 func main() {
 
 	// Flag management
 	ncFlag := flag.Bool("nc", false, "No color, if set disables the colors of the results.")
+	sFlag := flag.Bool("s", false, "String format output, displays only the result as a string of 81 digits.")
 
 	flag.Parse()
 
 	if *ncFlag {
 		colorsOn = false
+	}
+
+	if *sFlag {
+		strFmt = true
 	}
 
 	s, e := GetInput()
