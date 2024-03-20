@@ -1,5 +1,7 @@
 package solver
 
+import "fmt"
+
 // Load takes a valid string and it converts it to our sudoku structure
 func Load(s string) tBoard {
 	var board tBoard
@@ -45,8 +47,10 @@ func makeAvailable(a *[10]bool, b byte) {
 	}
 }
 
-// Solve tryes to solve the sudoku puzzle
-func Solve(board *tBoard) tStats {
+// Solve tries to solve the sudoku puzzle
+// board --> a previously loaded board game
+// bf    --> bruteforce allowed
+func Solve(board *tBoard, bf bool) tStats {
 	var stats tStats
 	var changesDone bool = true
 	var iter int = 0
@@ -78,12 +82,83 @@ func Solve(board *tBoard) tStats {
 			stats.deduced += missingCount
 		}
 	}
+
+	if bf && !isSolved(*board) && !anyWrong(*board) {
+		// We apply bruteforce by using backtracking
+		ck := make(map[string]bool)
+		solveBckTck(*board, &stats.solutions, &ck)
+	}
+
 	stats.solved = isSolved(*board)
 	if stats.solved {
 		stats.solutions = append(stats.solutions, Unload(*board))
 	}
 	stats.iterations = iter
 	return stats
+}
+
+// solveBckTck tries to solve the sudoku puzzle using backtracking (plus the strategies
+// defined at "Solve") and stores the different results into (sol)
+func solveBckTck(board tBoard, sol *[]string, ck *map[string]bool) {
+
+	//fmt.Println(Unload(board))
+
+	var changesDone bool = true
+	for changesDone {
+		changesDone = false
+
+		// First strategy: Remove the imposible.
+		// If one number candidate is left, this is the number.
+		for i, cell := range board {
+			if cell.num != 0 {
+				mark(&board, cell.num, getRowPos(i))
+				mark(&board, cell.num, getColPos(i))
+				mark(&board, cell.num, getBlkPos(i))
+			}
+		}
+		changesDone = setUnique(&board)
+
+		// Second strategy: Every row, column and block must have each number.
+		// If a number can only be placed in one spot, then this number must go to that spot.
+		if !changesDone && !isSolved(board) {
+			for i := 0; i < 9; i++ {
+				setUniqueFromList(&board, getRowNum(i), &changesDone)
+				setUniqueFromList(&board, getColNum(i), &changesDone)
+				setUniqueFromList(&board, getBlkNum(i), &changesDone)
+			}
+		}
+	}
+
+	if (*ck)[Unload(board)] {
+		return
+	}
+	(*ck)[Unload(board)] = true
+
+	if isSolved(board) {
+		*sol = append(*sol, Unload(board))
+		fmt.Println("We have", len(*sol), "solutions")
+		fmt.Println(Unload(board))
+		return
+	}
+
+	for i, v := range board {
+		if v.num != 0 {
+			continue
+		}
+		for j := 1; j < len(v.avl); j++ {
+			if v.avl[j] {
+				solveBckTck(modBoard(board, i, j), sol, ck)
+			}
+		}
+	}
+
+}
+
+// modBoard returns a modified board where where we have the number (b)
+// at position (a)
+func modBoard(board tBoard, a, b int) tBoard {
+	board[a].num = uint8(b)
+	return board
 }
 
 // setUnique checks all cells where the number is not yet known and updates it if
@@ -224,7 +299,6 @@ func GivenList(board tBoard) [81]bool {
 	return g
 }
 
-// TODO
 // Wrong returns an array of 81 bools that tells if a position
 // is wrong (repeated in a row, column or block)
 func Wrong(board tBoard) [81]bool {
@@ -261,6 +335,18 @@ func Wrong(board tBoard) [81]bool {
 		w[i] = count != 3
 	}
 	return w
+}
+
+// anyWrong returns true if there is at least one duplicated number on
+// a row, column or block.
+func anyWrong(board tBoard) bool {
+	l := Wrong(board)
+	for _, v := range l {
+		if v {
+			return true
+		}
+	}
+	return false
 }
 
 // isSolved returns true if the sudoku has been solved
