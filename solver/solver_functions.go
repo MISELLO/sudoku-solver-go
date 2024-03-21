@@ -89,7 +89,7 @@ func Solve(board *tBoard, bf bool) tStats {
 		solveBckTck(*board, &stats.solutions, &ck)
 	}
 
-	stats.solved = isSolved(*board)
+	stats.solved = isSolved(*board) && !anyWrong(*board)
 	if stats.solved {
 		stats.solutions = append(stats.solutions, Unload(*board))
 	}
