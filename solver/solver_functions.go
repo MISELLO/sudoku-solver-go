@@ -92,7 +92,17 @@ func Solve(board *tBoard, bf bool) tStats {
 	stats.solved = isSolved(*board) && !anyWrong(*board)
 	if stats.solved {
 		stats.solutions = append(stats.solutions, Unload(*board))
+	} else if len(stats.solutions) > 0 {
+		// No solutions at first, but we got solutions by using bruteforce
+		stats.solved = true
+		for i, v := range stats.solutions[0] {
+			// We load the first solution because the original board has missing numbers
+			if (*board)[i].num == 0 {
+				(*board)[i].num = uint8(byte(v) - '0')
+			}
+		}
 	}
+
 	stats.iterations = iter
 	return stats
 }
