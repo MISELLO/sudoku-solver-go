@@ -1,7 +1,5 @@
 package solver
 
-import "fmt"
-
 // Load takes a valid string and it converts it to our sudoku structure
 func Load(s string) tBoard {
 	var board tBoard
@@ -49,7 +47,7 @@ func makeAvailable(a *[10]bool, b byte) {
 
 // Solve tries to solve the sudoku puzzle
 // board --> a previously loaded board game
-// bf    --> bruteforce allowed
+// bf    --> brute-force allowed
 func Solve(board *tBoard, bf bool) tStats {
 	var stats tStats
 	var changesDone bool = true
@@ -84,7 +82,8 @@ func Solve(board *tBoard, bf bool) tStats {
 	}
 
 	if bf && !isSolved(*board) && !anyWrong(*board) {
-		// We apply bruteforce by using backtracking
+		// We apply brute-force by using backtracking
+		stats.bruteForce = true
 		ck := make(map[string]bool)
 		solveBckTck(*board, &stats.solutions, &ck)
 	}
@@ -93,7 +92,7 @@ func Solve(board *tBoard, bf bool) tStats {
 	if stats.solved {
 		stats.solutions = append(stats.solutions, Unload(*board))
 	} else if len(stats.solutions) > 0 {
-		// No solutions at first, but we got solutions by using bruteforce
+		// No solutions at first, but we got solutions by using brute-force
 		stats.solved = true
 		for i, v := range stats.solutions[0] {
 			// We load the first solution because the original board has missing numbers
@@ -146,8 +145,8 @@ func solveBckTck(board tBoard, sol *[]string, ck *map[string]bool) {
 
 	if isSolved(board) {
 		*sol = append(*sol, Unload(board))
-		fmt.Println("We have", len(*sol), "solutions")
-		fmt.Println(Unload(board))
+		//fmt.Println("We have", len(*sol), "solutions")
+		//fmt.Println(Unload(board))
 		return
 	}
 
@@ -448,4 +447,9 @@ func (s *tStats) Deduced() int {
 // NumSolutions tStats method that returns the number of solutions found
 func (s *tStats) NumSolutions() int {
 	return len(s.solutions)
+}
+
+// BruteForce tStats method that tells if we applied brute-force or not
+func (s *tStats) BruteForce() bool {
+	return s.bruteForce
 }

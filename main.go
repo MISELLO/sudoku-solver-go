@@ -20,7 +20,7 @@ func main() {
 	// Flag management
 	ncFlag := flag.Bool("nc", false, "No color, if set disables the colors of the results.")
 	sFlag := flag.Bool("s", false, "String format output, displays only the result as a string of 81 digits.")
-	bFlag := flag.Bool("b", false, "Bruteforce, it uses bruteforce when necessary [Under development]")
+	bFlag := flag.Bool("b", false, "Brute-force, it uses brute-force when necessary [Under development]")
 
 	flag.Parse()
 
@@ -50,5 +50,6 @@ func main() {
 		PrintIterations(stats.NumIterations())
 		PrintNumSolutions(stats.NumSolutions())
 		PrintDeduced(stats.Deduced())
+		PrintBruteForce(stats.BruteForce())
 	}
 }

@@ -92,7 +92,7 @@ func PrintSolved(s bool) {
 	} else {
 		fmt.Printf(" Solved: ")
 	}
-	fmt.Printf("    ")
+	fmt.Printf("     ")
 
 	// Print YES in green background or NO in red background
 	if colorsOn {
@@ -136,7 +136,7 @@ func PrintNumSolutions(n int) {
 	} else {
 		fmt.Printf(" Solutions: ")
 	}
-	fmt.Printf(" ")
+	fmt.Printf("  ")
 
 	// Print the number of iterations
 	fmt.Printf("%d\n", n)
@@ -169,6 +169,7 @@ func PrintIterations(n int) {
 	} else {
 		fmt.Printf(" Iterations: ")
 	}
+	fmt.Printf(" ")
 
 	// Print the number of iterations
 	fmt.Printf("%d\n", n)
@@ -201,10 +202,55 @@ func PrintDeduced(n int) {
 	} else {
 		fmt.Printf(" Deduced: ")
 	}
-	fmt.Printf("   ")
+	fmt.Printf("    ")
 
 	// Print the number of deductions
 	fmt.Printf("%d\n", n)
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
+}
+
+// PrintBruteForce prints if we have used brute-force or not to solve the sudoku
+func PrintBruteForce(b bool) {
+
+	// String format enabled: We don't print anything else
+	if strFmt {
+		return
+	}
+
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Up (7 times)
+	fmt.Printf("\033[7A")
+
+	// Right (25 times)
+	fmt.Printf("\033[25C")
+
+	// Print "Brute-force:" in bold
+	if colorsOn {
+		fmt.Printf("\033[1m Brute-force: \033[0m")
+	} else {
+		fmt.Printf(" Brute-force: ")
+	}
+	fmt.Printf("")
+
+	// Print if we used brute-force or not
+	// Print YES in green background or NO in red background
+	if colorsOn {
+		if b {
+			fmt.Printf("\033[42m YES \033[0m\n")
+		} else {
+			fmt.Printf("\033[41m NO \033[0m\n")
+		}
+	} else {
+		if b {
+			fmt.Printf(" YES \n")
+		} else {
+			fmt.Printf(" NO \n")
+		}
+	}
 
 	// Restore cursor position
 	fmt.Printf("\033[u")

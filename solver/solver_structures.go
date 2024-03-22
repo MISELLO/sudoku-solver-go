@@ -18,4 +18,5 @@ type tStats struct {
 	solutions  []string
 	iterations int
 	deduced    int
+	bruteForce bool
 }
