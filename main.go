@@ -14,6 +14,7 @@ var noFlagArgs []string
 var colorsOn bool = true
 var strFmt bool = false
 var bruteForce bool = false
+var allSolutions bool = false
 
 func main() {
 
@@ -43,7 +44,7 @@ func main() {
 		PrintUsage()
 	} else {
 		board := solver.Load(s)
-		stats := solver.Solve(&board, bruteForce)
+		stats := solver.Solve(&board, bruteForce, allSolutions)
 		s = solver.Unload(board)
 		PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))
 		PrintSolved(stats.IsSolved())
