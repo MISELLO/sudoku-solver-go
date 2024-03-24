@@ -49,7 +49,7 @@ func main() {
 		PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))
 		PrintSolved(stats.IsSolved())
 		PrintIterations(stats.NumIterations())
-		PrintNumSolutions(stats.NumSolutions())
+		PrintNumSolutions(stats.NumSolutions(), stats.Interrupted())
 		PrintDeduced(stats.Deduced())
 		PrintBruteForce(stats.BruteForce())
 	}

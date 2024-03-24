@@ -114,7 +114,7 @@ func PrintSolved(s bool) {
 }
 
 // PrintNumSolutions prints the number of solutions found
-func PrintNumSolutions(n int) {
+func PrintNumSolutions(n int, interrupt bool) {
 
 	// String format enabled: We don't print anything else
 	if strFmt {
@@ -138,8 +138,12 @@ func PrintNumSolutions(n int) {
 	}
 	fmt.Printf("  ")
 
-	// Print the number of iterations
-	fmt.Printf("%d\n", n)
+	// Print the number of solutions
+	if interrupt {
+		fmt.Printf("%d(+)\n", n)
+	} else {
+		fmt.Printf("%d\n", n)
+	}
 
 	// Restore cursor position
 	fmt.Printf("\033[u")

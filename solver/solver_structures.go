@@ -14,9 +14,10 @@ type tBoard [81]tCell
 
 // tStats is a type that contains result information
 type tStats struct {
-	solved     bool
-	solutions  []string
-	iterations int
-	deduced    int
-	bruteForce bool
+	solved      bool
+	solutions   []string
+	iterations  int
+	deduced     int
+	bruteForce  bool
+	interrupted bool
 }

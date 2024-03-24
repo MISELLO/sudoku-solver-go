@@ -86,7 +86,7 @@ func Solve(board *tBoard, bf bool, as bool) tStats {
 		// We apply brute-force by using backtracking
 		stats.bruteForce = true
 		ck := make(map[string]bool)
-		solveBckTck(*board, &stats.solutions, &ck, as)
+		solveBckTck(*board, &stats, &ck, as)
 	}
 
 	stats.solved = isSolved(*board) && !anyWrong(*board)
@@ -109,7 +109,7 @@ func Solve(board *tBoard, bf bool, as bool) tStats {
 
 // solveBckTck tries to solve the sudoku puzzle using backtracking (plus the strategies
 // defined at "Solve") and stores the different results into (sol)
-func solveBckTck(board tBoard, sol *[]string, ck *map[string]bool, allSol bool) {
+func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, allSol bool) {
 
 	//fmt.Println(Unload(board))
 
@@ -145,8 +145,8 @@ func solveBckTck(board tBoard, sol *[]string, ck *map[string]bool, allSol bool) 
 	(*ck)[Unload(board)] = true
 
 	if isSolved(board) {
-		*sol = append(*sol, Unload(board))
-		//fmt.Println("We have", len(*sol), "solutions")
+		(*stats).solutions = append((*stats).solutions, Unload(board))
+		//fmt.Println("We have", len(*stats.solutions), "solutions")
 		//fmt.Println(Unload(board))
 		return
 	}
@@ -156,12 +156,13 @@ func solveBckTck(board tBoard, sol *[]string, ck *map[string]bool, allSol bool) 
 			continue
 		}
 		for j := 1; j < len(v.avl); j++ {
-			if !allSol && len(*sol) > 0 {
+			if !allSol && len((*stats).solutions) >= 10 {
 				// We don't need more solutions
+				(*stats).interrupted = true
 				return
 			}
 			if v.avl[j] {
-				solveBckTck(modBoard(board, i, j), sol, ck, allSol)
+				solveBckTck(modBoard(board, i, j), stats, ck, allSol)
 			}
 		}
 	}
@@ -457,4 +458,10 @@ func (s *tStats) NumSolutions() int {
 // BruteForce tStats method that tells if we applied brute-force or not
 func (s *tStats) BruteForce() bool {
 	return s.bruteForce
+}
+
+// Interrupted tStats method that tells if the calculation of solutions have been truncated.
+// (There might be more solutions if yes)
+func (s *tStats) Interrupted() bool {
+	return s.interrupted
 }
