@@ -48,7 +48,10 @@ func main() {
 		PrintUsage()
 	} else {
 		board := solver.Load(s)
+		done := make(chan bool)
+		go Processing(done)
 		stats := solver.Solve(&board, bruteForce, maxSol)
+		done <- true
 		s = solver.Unload(board)
 		PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))
 		PrintSolved(stats.IsSolved())

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 // PrintUsage prints how to use this command.
@@ -37,7 +38,8 @@ func printSudokuStringFormat(s string, g [81]bool, w [81]bool) {
 }
 
 func printSudokuRegular(s string, g [81]bool, w [81]bool) {
-	fmt.Println()
+	// Make sure to clear the processing message
+	fmt.Println("\033[1K                    ")
 	for i := 0; i < len(s); i++ {
 		if i != 0 && i%9 == 0 {
 			fmt.Println()
@@ -258,4 +260,27 @@ func PrintBruteForce(b bool) {
 
 	// Restore cursor position
 	fmt.Printf("\033[u")
+}
+
+// Processing prints something that moves on the screen so the user can see it is still working
+func Processing(c <-chan bool) {
+	text := "Processing ... |"
+	fmt.Printf("%s", text)
+	ani := []rune("/—\\|")
+	i := 0
+	t := time.Now()
+	for {
+		select {
+		case <-c:
+			fmt.Printf("\033[1K")
+			return
+		default:
+			if time.Since(t) >= 500*time.Millisecond {
+				t = time.Now()
+				fmt.Printf("\b")
+				fmt.Printf("%c", ani[i])
+				i = (i + 1) % len(ani)
+			}
+		}
+	}
 }
