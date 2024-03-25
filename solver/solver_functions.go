@@ -48,8 +48,8 @@ func makeAvailable(a *[10]bool, b byte) {
 // Solve tries to solve the sudoku puzzle
 // board --> a previously loaded board game
 // bf    --> brute-force allowed
-// as    --> all solutions
-func Solve(board *tBoard, bf bool, as bool) tStats {
+// ms    --> max solutions
+func Solve(board *tBoard, bf bool, ms uint) tStats {
 	var stats tStats
 	var changesDone bool = true
 	var iter int = 0
@@ -86,7 +86,7 @@ func Solve(board *tBoard, bf bool, as bool) tStats {
 		// We apply brute-force by using backtracking
 		stats.bruteForce = true
 		ck := make(map[string]bool)
-		solveBckTck(*board, &stats, &ck, as)
+		solveBckTck(*board, &stats, &ck, ms)
 	}
 
 	stats.solved = isSolved(*board) && !anyWrong(*board)
@@ -108,8 +108,8 @@ func Solve(board *tBoard, bf bool, as bool) tStats {
 }
 
 // solveBckTck tries to solve the sudoku puzzle using backtracking (plus the strategies
-// defined at "Solve") and stores the different results into (sol)
-func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, allSol bool) {
+// defined at "Solve") and stores the different results into the tStats structure (stats)
+func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, ms uint) {
 
 	//fmt.Println(Unload(board))
 
@@ -156,13 +156,13 @@ func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, allSol bool) 
 			continue
 		}
 		for j := 1; j < len(v.avl); j++ {
-			if !allSol && len((*stats).solutions) >= 10 {
+			if len((*stats).solutions) >= int(ms) {
 				// We don't need more solutions
 				(*stats).interrupted = true
 				return
 			}
 			if v.avl[j] {
-				solveBckTck(modBoard(board, i, j), stats, ck, allSol)
+				solveBckTck(modBoard(board, i, j), stats, ck, ms)
 			}
 		}
 	}
