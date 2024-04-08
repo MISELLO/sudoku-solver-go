@@ -17,6 +17,7 @@ var bruteForce bool = false
 
 // var allSolutions bool = false
 var maxSol uint
+var bruteFTime uint
 
 func main() {
 
@@ -26,6 +27,8 @@ func main() {
 	bFlag := flag.Bool("b", false, "Brute-force, it uses brute-force when necessary [Under development]")
 	flag.UintVar(&maxSol, "ms", 10, "Max solutions, defines the maximum number of solutions the algorithm will "+
 		"calculate. If this number is reached a \"(+)\" will appear next to the Solutions amount output.")
+	flag.UintVar(&bruteFTime, "bt", 60, "Brute-force time, if -b is enabled, time in seconds the brute-force "+
+		"algorithm is allowed to run. If this time is reached a \"(+)\" will appear next to the Solutions amount output.")
 
 	flag.Parse()
 
@@ -50,7 +53,7 @@ func main() {
 		board := solver.Load(s)
 		done := make(chan bool)
 		go Processing(done)
-		stats := solver.Solve(&board, bruteForce, maxSol)
+		stats := solver.Solve(&board, bruteForce, maxSol, bruteFTime)
 		done <- true
 		s = solver.Unload(board)
 		PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))

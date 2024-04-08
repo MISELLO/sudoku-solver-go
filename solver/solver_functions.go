@@ -1,5 +1,7 @@
 package solver
 
+import "time"
+
 // Load takes a valid string and it converts it to our sudoku structure
 func Load(s string) tBoard {
 	var board tBoard
@@ -49,7 +51,8 @@ func makeAvailable(a *[10]bool, b byte) {
 // board --> a previously loaded board game
 // bf    --> brute-force allowed
 // ms    --> max solutions
-func Solve(board *tBoard, bf bool, ms uint) tStats {
+// bt 	 --> brute-force time
+func Solve(board *tBoard, bf bool, ms, bt uint) tStats {
 	var stats tStats
 	var changesDone bool = true
 	var iter int = 0
@@ -84,9 +87,10 @@ func Solve(board *tBoard, bf bool, ms uint) tStats {
 
 	if bf && !isSolved(*board) && !anyWrong(*board) {
 		// We apply brute-force by using backtracking
+		startTime := time.Now()
 		stats.bruteForce = true
 		ck := make(map[string]bool)
-		solveBckTck(*board, &stats, &ck, ms)
+		solveBckTck(*board, &stats, &ck, ms, bt, startTime)
 	}
 
 	stats.solved = isSolved(*board) && !anyWrong(*board)
@@ -109,7 +113,7 @@ func Solve(board *tBoard, bf bool, ms uint) tStats {
 
 // solveBckTck tries to solve the sudoku puzzle using backtracking (plus the strategies
 // defined at "Solve") and stores the different results into the tStats structure (stats)
-func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, ms uint) {
+func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, ms, bt uint, startTime time.Time) {
 
 	//fmt.Println(Unload(board))
 
@@ -156,13 +160,13 @@ func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, ms uint) {
 			continue
 		}
 		for j := 1; j < len(v.avl); j++ {
-			if len((*stats).solutions) >= int(ms) {
-				// We don't need more solutions
+			if len((*stats).solutions) >= int(ms) || time.Since(startTime) >= time.Duration(bt)*time.Second {
+				// We don't need more solutions or time is over
 				(*stats).interrupted = true
 				return
 			}
 			if v.avl[j] {
-				solveBckTck(modBoard(board, i, j), stats, ck, ms)
+				solveBckTck(modBoard(board, i, j), stats, ck, ms, bt, startTime)
 			}
 		}
 	}
