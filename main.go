@@ -24,7 +24,7 @@ func main() {
 	// Flag management
 	ncFlag := flag.Bool("nc", false, "No color, if set disables the colors of the results.")
 	sFlag := flag.Bool("s", false, "String format output, displays only the result as a string of 81 digits.")
-	bFlag := flag.Bool("b", false, "Brute-force, it uses brute-force when necessary [Under development]")
+	bFlag := flag.Bool("b", false, "Brute-force, it uses brute-force when necessary.")
 	flag.UintVar(&maxSol, "ms", 10, "Max solutions, defines the maximum number of solutions the algorithm will "+
 		"calculate. If this number is reached a \"(+)\" will appear next to the Solutions amount output.")
 	flag.UintVar(&bruteFTime, "bt", 60, "Brute-force time, if -b is enabled, time in seconds the brute-force "+
