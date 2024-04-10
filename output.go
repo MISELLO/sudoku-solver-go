@@ -66,6 +66,36 @@ func printSudokuRegular(s string, g [81]bool, w [81]bool) {
 	fmt.Println()
 }
 
+// PrintBoard prints an empty board and a message instructing the user to fill it
+func PrintBoard() {
+
+	fmt.Println()
+	fmt.Println(" Please, fill all known cells and press ENTER when done.")
+	fmt.Println()
+
+	for i := 0; i < 81; i++ {
+		if i != 0 && i%9 == 0 {
+			fmt.Println()
+		} else if i%9 != 0 && i%3 == 0 {
+			fmt.Print(" |")
+		}
+		if i != 0 && i%27 == 0 {
+			fmt.Println("-------+-------+-------")
+		}
+		fmt.Print("  ")
+	}
+
+	fmt.Println()
+	fmt.Println()
+}
+
+// RemoveBoard removes all that was drawn by PrintBoard() including the message to the user
+func RemoveBoard() {
+	for i := 0; i < 15; i++ {
+		fmt.Print("\033[1F\033[2K")
+	}
+}
+
 // PrintErrMsg prints the error message declared on main.go and updated on input.go
 func PrintErrMsg() {
 	fmt.Println(errMsg)

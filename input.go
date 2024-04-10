@@ -1,7 +1,33 @@
 package main
 
+/*
+#include <stdio.h>
+#include <unistd.h>
+#include <termios.h>
+char getch(){
+	char ch = 0;
+	struct termios old = {0};
+	fflush(stdout);
+	if( tcgetattr(0, &old) < 0 ) perror("tcsetattr()");
+	old.c_lflag &= ~ICANON;
+	old.c_lflag &= ~ECHO;
+	old.c_cc[VMIN] = 1;
+	old.c_cc[VTIME] = 0;
+	if( tcsetattr(0, TCSANOW, &old) < 0 ) perror("tcsetattr ICANON");
+	if( read(0, &ch,1) < 0 ) perror("read()");
+	old.c_lflag |= ICANON;
+	old.c_lflag |= ECHO;
+	if(tcsetattr(0, TCSADRAIN, &old) < 0) perror("tcsetattr ~ICANON");
+	return ch;
+}
+*/
+import "C"
+
+// code above was found on https://stackoverflow.com/questions/14094190/function-similar-to-getchar
+
 import (
 	"flag"
+	"fmt"
 )
 
 // GetInput checks several forms of input in order to get the input from the user
@@ -20,10 +46,9 @@ func GetInput() (string, bool) {
 			result = ""
 			error = true
 		}
-	} else {
-		result = ""
-		errMsg = "No arguments on program call"
-		error = true
+	} else { // We do NOT have arguments
+		result = visualInput()
+		error = false
 	}
 	return result, error
 }
@@ -52,4 +77,105 @@ func firstArgIsValid() bool {
 		}
 	}
 	return true // All are valid digits
+}
+
+// visualInput makes the user introduce the input on a drawn board on the screen.
+func visualInput() string {
+
+	input := "000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+
+	PrintBoard()
+
+	var posX, posY int
+
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Go to first position
+	fmt.Print("\033[12A\033[1C")
+
+	k := C.getch()
+	for k != 10 {
+		// Arrow key
+		if k == '\033' && C.getch() == '[' { // (27 & 91)
+			movement(&posX, &posY)
+		}
+
+		// Number key (or tab or space)
+		if (k >= '0' && k <= '9') || k == 9 || k == ' ' {
+			number(byte(k), &posX, &posY, &input)
+		}
+
+		k = C.getch()
+	}
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
+
+	RemoveBoard()
+	return input
+}
+
+// movement manages the arrow movement inside the visualInput function
+func movement(x, y *int) {
+	k := C.getch()
+	switch k {
+	case 'A': // Up (65)
+		if *y > 0 {
+			if *y%3 == 0 {
+				fmt.Print("\033[A")
+			}
+			fmt.Print("\033[A")
+			*y--
+		}
+	case 'B': // Down (66)
+		if *y < 8 {
+			*y++
+			if *y%3 == 0 {
+				fmt.Print("\033[B")
+			}
+			fmt.Print("\033[B")
+		}
+	case 'C': // Right (67)
+		if *x < 8 {
+			*x++
+			if *x%3 == 0 {
+				fmt.Print("\033[2C")
+			}
+			fmt.Print("\033[2C")
+		}
+	case 'D': // Left (68)
+		if *x > 0 {
+			if *x%3 == 0 {
+				fmt.Print("\033[2D")
+			}
+			fmt.Print("\033[2D")
+			*x--
+		}
+	}
+}
+
+// number manages the number input inside the visualInput function
+func number(k byte, x, y *int, s *string) {
+	if k >= '1' && k <= '9' {
+		fmt.Print(string(k))
+		i := (*y)*9 + (*x)
+		(*s) = (*s)[:i] + string(k) + (*s)[i+1:]
+		fmt.Print("\b")
+	}
+	if *x < 8 {
+		*x++
+		if *x%3 == 0 {
+			fmt.Print("\033[2C")
+		}
+		fmt.Print("\033[2C")
+	} else if *x == 8 && *y < 8 {
+		*x = 0
+		fmt.Print("\033[20D")
+		*y++
+		if *y%3 == 0 {
+			fmt.Print("\033[B")
+		}
+		fmt.Print("\033[B")
+	}
 }
