@@ -148,7 +148,7 @@ func solveBckTck(board tBoard, stats *tStats, ck *map[string]bool, ms, bt uint, 
 	}
 	(*ck)[Unload(board)] = true
 
-	if isSolved(board) {
+	if solFound(board) {
 		(*stats).solutions = append((*stats).solutions, Unload(board))
 		//fmt.Println("We have", len(*stats.solutions), "solutions")
 		//fmt.Println(Unload(board))
@@ -376,6 +376,11 @@ func isSolved(board tBoard) bool {
 		}
 	}
 	return true
+}
+
+// solFound returns true if we found a correct solution
+func solFound(board tBoard) bool {
+	return isSolved(board) && !anyWrong(board)
 }
 
 // setUniqueFromList checks that the given list (l) of indexes reference
