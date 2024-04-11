@@ -101,8 +101,8 @@ func visualInput() string {
 			movement(&posX, &posY)
 		}
 
-		// Number key (or tab or space)
-		if (k >= '0' && k <= '9') || k == 9 || k == ' ' {
+		// Number key (or tab or space or backspace)
+		if (k >= '0' && k <= '9') || k == '\t' || k == ' ' || k == 127 {
 			number(byte(k), &posX, &posY, &input)
 		}
 
@@ -157,6 +157,28 @@ func movement(x, y *int) {
 
 // number manages the number input inside the visualInput function
 func number(k byte, x, y *int, s *string) {
+	if k == 127 { // Backspace
+		//fmt.Print("BB")
+		if *x == 0 && *y == 0 {
+			// We are at the start, do nothing
+			return
+		} else if *x == 0 {
+			if *y%3 == 0 {
+				fmt.Print("\033[A")
+			}
+			fmt.Print("\033[A")
+			*y--
+			*x = 8
+			fmt.Print("\033[20C")
+		} else {
+			if *x%3 == 0 {
+				fmt.Print("\033[2D")
+			}
+			fmt.Print("\033[2D")
+			*x--
+		}
+		return
+	}
 	if k >= '1' && k <= '9' {
 		fmt.Print(string(k))
 		i := (*y)*9 + (*x)
