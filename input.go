@@ -157,28 +157,12 @@ func movement(x, y *int) {
 
 // number manages the number input inside the visualInput function
 func number(k byte, x, y *int, s *string) {
-	if k == 127 { // Backspace
-		//fmt.Print("BB")
-		if *x == 0 && *y == 0 {
-			// We are at the start, do nothing
-			return
-		} else if *x == 0 {
-			if *y%3 == 0 {
-				fmt.Print("\033[A")
-			}
-			fmt.Print("\033[A")
-			*y--
-			*x = 8
-			fmt.Print("\033[20C")
-		} else {
-			if *x%3 == 0 {
-				fmt.Print("\033[2D")
-			}
-			fmt.Print("\033[2D")
-			*x--
-		}
+	numberBackSpManagement(k, x, y, s)
+
+	if k == 127 { // Backspace already managed
 		return
 	}
+
 	if k >= '1' && k <= '9' {
 		fmt.Print(string(k))
 		i := (*y)*9 + (*x)
@@ -200,4 +184,40 @@ func number(k byte, x, y *int, s *string) {
 		}
 		fmt.Print("\033[B")
 	}
+}
+
+// numberBackSpManagement or "number backspace management" is a function that
+// handles the use of backspace inside the number function that is used on
+// the visualInput function.
+func numberBackSpManagement(k byte, x, y *int, s *string) {
+	if k != 127 { // We only work if it is a backspace
+		return
+	}
+
+	if *x == 0 && *y == 0 {
+		// We are at the start, do nothing
+		return
+	} else if *x == 8 && *y == 8 && (*s)[80] != '0' { // Last position filled
+		(*s) = (*s)[:80] + "0"
+		fmt.Print(" \b")
+		return
+	} else if *x == 0 {
+		if *y%3 == 0 {
+			fmt.Print("\033[A")
+		}
+		fmt.Print("\033[A")
+		*y--
+		*x = 8
+		fmt.Print("\033[20C")
+	} else {
+		if *x%3 == 0 {
+			fmt.Print("\033[2D")
+		}
+		fmt.Print("\033[2D")
+		*x--
+	}
+	i := (*y)*9 + (*x)
+	(*s) = (*s)[:i] + "0" + (*s)[i+1:]
+	fmt.Print(" \b")
+	return
 }
