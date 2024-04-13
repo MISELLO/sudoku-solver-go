@@ -168,6 +168,10 @@ func number(k byte, x, y *int, s *string) {
 		i := (*y)*9 + (*x)
 		(*s) = (*s)[:i] + string(k) + (*s)[i+1:]
 		fmt.Print("\b")
+	} else if k == ' ' || k == '0' {
+		i := (*y)*9 + (*x)
+		(*s) = (*s)[:i] + "0" + (*s)[i+1:]
+		fmt.Print(" \b")
 	}
 	if *x < 8 {
 		*x++
