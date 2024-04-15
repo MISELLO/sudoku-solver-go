@@ -16,6 +16,8 @@ func PrintUsage() {
 // s --> a string of 81 digits that represent the sudoku board
 // g --> an array where each position tells if that position
 // was given (true) or calculated (false)
+// w --> an array where each position tells if that position
+// is wrong (repeated number) or not.
 func PrintSudoku(s string, g [81]bool, w [81]bool) {
 	if strFmt {
 		printSudokuStringFormat(s, g, w)
@@ -24,7 +26,7 @@ func PrintSudoku(s string, g [81]bool, w [81]bool) {
 	}
 }
 
-func printSudokuStringFormat(s string, g [81]bool, w [81]bool) {
+func printSudokuStringFormat(s string, g, w [81]bool) {
 	for i := 0; i < len(s); i++ {
 		if colorsOn && w[i] {
 			fmt.Print("\033[41m\033[90m", s[i:i+1], "\033[0m")
@@ -37,7 +39,7 @@ func printSudokuStringFormat(s string, g [81]bool, w [81]bool) {
 	fmt.Println()
 }
 
-func printSudokuRegular(s string, g [81]bool, w [81]bool) {
+func printSudokuRegular(s string, g, w [81]bool) {
 	// Make sure to clear the processing message
 	fmt.Println("\033[1K                    ")
 	for i := 0; i < len(s); i++ {
@@ -51,19 +53,25 @@ func printSudokuRegular(s string, g [81]bool, w [81]bool) {
 		}
 
 		if s[i:i+1] != "0" {
-			if colorsOn && w[i] {
-				fmt.Print(" \033[41m\033[90m", s[i:i+1], "\033[0m")
-			} else if colorsOn && g[i] {
-				fmt.Print(" \033[90m", s[i:i+1], "\033[0m")
-			} else {
-				fmt.Print(" ", s[i:i+1])
-			}
+			printDigit(s[i:i+1], g[i], w[i])
 		} else {
 			fmt.Print("  ")
 		}
 	}
 	fmt.Println()
 	fmt.Println()
+}
+
+func printDigit(d string, gi, wi bool) {
+	if colorsOn && wi && gi {
+		fmt.Print(" \033[41m\033[90m", d, "\033[0m")
+	} else if colorsOn && wi {
+		fmt.Print(" \033[41m", d, "\033[0m")
+	} else if colorsOn && gi {
+		fmt.Print(" \033[90m", d, "\033[0m")
+	} else {
+		fmt.Print(" ", d)
+	}
 }
 
 // PrintBoard prints an empty board and a message instructing the user to fill it
