@@ -153,8 +153,9 @@ func PrintSolved(s bool) {
 	fmt.Printf("\033[u")
 }
 
-// PrintNumSolutions prints the number of solutions found
-func PrintNumSolutions(n int, interrupt bool) {
+// PrintUnknown prints the number of empty cells there were on the board
+// before starting to solve in a prety format.
+func PrintUnknown(n int) {
 
 	// String format enabled: We don't print anything else
 	if strFmt {
@@ -166,6 +167,38 @@ func PrintNumSolutions(n int, interrupt bool) {
 
 	// Up (10 times)
 	fmt.Printf("\033[10A")
+
+	// Right (25 times)
+	fmt.Printf("\033[25C")
+
+	// Print "Blanks:" in bold
+	if colorsOn {
+		fmt.Printf("\033[1m Blanks: \033[0m")
+	} else {
+		fmt.Printf(" Blanks: ")
+	}
+	fmt.Printf("     ")
+
+	// Print the number of blanks
+	fmt.Printf("%d/81 (%.2f%%)\n", n, float64(n)/81.00*100.00)
+
+	// Restore cursor position
+	fmt.Printf("\033[u")
+}
+
+// PrintNumSolutions prints the number of solutions found
+func PrintNumSolutions(n int, interrupt bool) {
+
+	// String format enabled: We don't print anything else
+	if strFmt {
+		return
+	}
+
+	// Save cursor position
+	fmt.Printf("\033[s")
+
+	// Up (9 times)
+	fmt.Printf("\033[9A")
 
 	// Right (25 times)
 	fmt.Printf("\033[25C")
@@ -201,8 +234,8 @@ func PrintIterations(n int) {
 	// Save cursor position
 	fmt.Printf("\033[s")
 
-	// Up (9 times)
-	fmt.Printf("\033[9A")
+	// Up (8 times)
+	fmt.Printf("\033[8A")
 
 	// Right (25 times)
 	fmt.Printf("\033[25C")
@@ -234,8 +267,8 @@ func PrintDeduced(n int) {
 	// Save cursor position
 	fmt.Printf("\033[s")
 
-	// Up (8 times)
-	fmt.Printf("\033[8A")
+	// Up (7 times)
+	fmt.Printf("\033[7A")
 
 	// Right (25 times)
 	fmt.Printf("\033[25C")
@@ -266,8 +299,8 @@ func PrintBruteForce(b bool) {
 	// Save cursor position
 	fmt.Printf("\033[s")
 
-	// Up (7 times)
-	fmt.Printf("\033[7A")
+	// Up (6 times)
+	fmt.Printf("\033[6A")
 
 	// Right (25 times)
 	fmt.Printf("\033[25C")

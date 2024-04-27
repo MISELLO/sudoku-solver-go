@@ -453,6 +453,20 @@ func countMissing(b tBoard) int {
 	return count
 }
 
+// CountUnknown returns the number of empty cells there were on the board
+// before starting to solve.
+// Returning value will be always between 0 and 81
+func CountUnknown(b tBoard) int {
+	var n int
+	for _, c := range b {
+		if !c.avl[0] {
+			// Number not known from the start
+			n++
+		}
+	}
+	return n
+}
+
 // Deduced tStats method that returns the number of iterations done
 // in order to solve the sudoku
 func (s *tStats) Deduced() int {
