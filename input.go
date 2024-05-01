@@ -32,9 +32,12 @@ import (
 
 // GetInput checks several forms of input in order to get the input from the user
 // This forms are:
-//   - Parameters: 1 single parameter when calling the program that represents the 81 digits for
-//     the sudoku, starting from top left and going right, replacing the empty spaces
-//     with 0's.
+//   - File: [TODO]
+//   - String: 1 single parameter (not counting flags) when calling the program that represents
+//     the 81 digits for the sudoku, starting from top left and going right, replacing the empty
+//     spaces with 0's.
+//   - Visual: If no parameters are provided a board will be displayed and the user will have to
+//     fill it.
 func GetInput() (string, bool) {
 	var result string
 	var error bool
