@@ -104,6 +104,9 @@ func processFile(f *os.File) (string, bool) {
 	if len(s) == 81 {
 		return processFileType1(s)
 	}
+	if len(s) == 9 {
+		return processFileType2(f, scn, s)
+	}
 	errMsg = "Incorrect file content (not supported length)"
 	result = ""
 	error = true
@@ -125,6 +128,34 @@ func processFileType1(s string) (string, bool) {
 			result = ""
 			error = true
 		}
+	}
+	return result, error
+}
+
+// processFileType2 process the input file when it's type 2 (see samples folder)
+func processFileType2(f *os.File, scn *bufio.Scanner, s string) (string, bool) {
+	var result string = ""
+	var error bool = false
+
+	for n := 0; n < 9 && !error; n++ {
+		if len(s) != 9 {
+			errMsg = "Incorrect file content (not supported length)"
+			result = ""
+			error = true
+		}
+		for i := 0; i < len(s) && !error; i++ {
+			if s[i] == ' ' {
+				result += "0"
+			} else if s[i] >= '0' && s[i] <= '9' {
+				result += string(s[i])
+			} else {
+				errMsg = "Incorrect file content (unrecognized character \"" + string(s[i]) + "\")"
+				result = ""
+				error = true
+			}
+		}
+		scn.Scan()
+		s = scn.Text()
 	}
 	return result, error
 }
