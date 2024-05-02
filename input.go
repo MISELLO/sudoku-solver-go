@@ -26,8 +26,10 @@ import "C"
 // code above was found on https://stackoverflow.com/questions/14094190/function-similar-to-getchar
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"os"
 )
 
 // GetInput checks several forms of input in order to get the input from the user
@@ -41,11 +43,20 @@ import (
 func GetInput() (string, bool) {
 	var result string
 	var error bool
+
 	if weHaveArgs() {
-		if firstArgIsValid() {
+		// We first try to open the first argument
+		f, err := os.Open(flag.Arg(0))
+		if err == nil {
+			// We process the valid input file
+			defer f.Close()
+			result, error = processFile(f)
+		} else if firstArgIsValid() {
+			// Input is not a file, but a valid sudoku formatted as a string
 			result = flag.Arg(0)
 			error = false
 		} else {
+			// Not a file or valid input
 			result = ""
 			error = true
 		}
@@ -66,20 +77,49 @@ func firstArgIsValid() bool {
 	s := flag.Arg(0)
 	count := len(s)
 	if count > 81 {
-		errMsg = "Argument length is too long"
+		errMsg = "Argument not a file and length is too long"
 		return false
 	}
 	if count < 81 {
-		errMsg = "Argument length is too short"
+		errMsg = "Argument not a file and length is too short"
 		return false
 	}
 	for i := 0; i < count; i++ {
 		if s[i] < '0' || s[i] > '9' {
-			errMsg = "Digit \"" + string(s[i]) + "\" not recognized"
+			errMsg = "Argument not a file and digit \"" + string(s[i]) + "\" not recognized"
 			return false
 		}
 	}
 	return true // All are valid digits
+}
+
+// processFile reads the input file and returns the result and if there has been an error.
+func processFile(f *os.File) (string, bool) {
+	var result string
+	var error bool
+
+	scn := bufio.NewScanner(f)
+	scn.Scan()
+	s := scn.Text()
+	count := len(s)
+	if count != 81 {
+		errMsg = "Incorrect file content (not supported length)"
+		result = ""
+		error = true
+	} else {
+		for i := 0; i < count && !error; i++ {
+			if s[i] == ' ' {
+				result += "0"
+			} else if s[i] >= '0' && s[i] <= '9' {
+				result += string(s[i])
+			} else {
+				errMsg = "Incorrect file content (unrecognized character \"" + string(s[i]) + "\")"
+				result = ""
+				error = true
+			}
+		}
+	}
+	return result, error
 }
 
 // visualInput makes the user introduce the input on a drawn board on the screen.
