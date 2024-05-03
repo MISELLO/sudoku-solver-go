@@ -107,6 +107,9 @@ func processFile(f *os.File) (string, bool) {
 	if len(s) == 9 {
 		return processFileType2(f, scn, s)
 	}
+	if len(s) == 11 {
+		return processFileType3(f, scn, s)
+	}
 	errMsg = "Incorrect file content (not supported length)"
 	result = ""
 	error = true
@@ -144,6 +147,44 @@ func processFileType2(f *os.File, scn *bufio.Scanner, s string) (string, bool) {
 			error = true
 		}
 		for i := 0; i < len(s) && !error; i++ {
+			if s[i] == ' ' {
+				result += "0"
+			} else if s[i] >= '0' && s[i] <= '9' {
+				result += string(s[i])
+			} else {
+				errMsg = "Incorrect file content (unrecognized character \"" + string(s[i]) + "\")"
+				result = ""
+				error = true
+			}
+		}
+		scn.Scan()
+		s = scn.Text()
+	}
+	return result, error
+}
+
+// processFileType3 process the input file when it's type 3 (see samples folder)
+func processFileType3(f *os.File, scn *bufio.Scanner, s string) (string, bool) {
+	var result string = ""
+	var error bool = false
+
+	for n := 0; n < 11 && !error; n++ {
+		if n == 3 || n == 7 {
+			// We skip the horizontal lines
+			scn.Scan()
+			s = scn.Text()
+			continue
+		}
+		if len(s) != 11 {
+			errMsg = "Incorrect file content (not supported length)"
+			result = ""
+			error = true
+		}
+		for i := 0; i < len(s) && !error; i++ {
+			if i == 3 || i == 7 {
+				// We skip the vertical lines
+				continue
+			}
 			if s[i] == ' ' {
 				result += "0"
 			} else if s[i] >= '0' && s[i] <= '9' {
