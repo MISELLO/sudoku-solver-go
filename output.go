@@ -27,6 +27,8 @@ func PrintSudoku(s string, g [81]bool, w [81]bool) {
 }
 
 func printSudokuStringFormat(s string, g, w [81]bool) {
+	// Make sure to clear the processing message
+	fmt.Printf("\033[20D                    \033[20D")
 	for i := 0; i < len(s); i++ {
 		if colorsOn && w[i] {
 			fmt.Print("\033[41m\033[90m", s[i:i+1], "\033[0m")
@@ -41,7 +43,7 @@ func printSudokuStringFormat(s string, g, w [81]bool) {
 
 func printSudokuRegular(s string, g, w [81]bool) {
 	// Make sure to clear the processing message
-	fmt.Println("\033[1K                    ")
+	fmt.Println("\033[20D                    \033[20D")
 	for i := 0; i < len(s); i++ {
 		if i != 0 && i%9 == 0 {
 			fmt.Println()
