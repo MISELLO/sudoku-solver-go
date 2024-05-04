@@ -74,6 +74,28 @@ func printDigit(d string, gi, wi bool) {
 	}
 }
 
+// PrintAllSolutions is just like PrintSudoku, but it prints them all instead of just one.
+func PrintAllSolutions(sol []string, g [81]bool, w [81]bool) {
+	if strFmt {
+		for i := 0; i < len(sol); i++ {
+			printSudokuStringFormat(sol[i], g, w)
+		}
+	} else {
+		if len(sol) == 0 {
+			fmt.Println()
+			fmt.Println(" No solutions found")
+			fmt.Println()
+			fmt.Printf("\n\n\n\n\n\n\n\n\n\n\n\n") // In order to display stats
+		} else {
+			for i := 0; i < len(sol); i++ {
+				fmt.Println()
+				fmt.Printf(" Solution %d / %d\n", i+1, len(sol))
+				printSudokuRegular(sol[i], g, w)
+			}
+		}
+	}
+}
+
 // PrintBoard prints an empty board and a message instructing the user to fill it
 func PrintBoard() {
 

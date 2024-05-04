@@ -14,8 +14,7 @@ var noFlagArgs []string
 var colorsOn bool = true
 var strFmt bool = false
 var bruteForce bool = false
-
-// var allSolutions bool = false
+var allSolutions bool = false
 var maxSol uint
 var bruteFTime uint
 
@@ -31,6 +30,7 @@ func main() {
 	ncFlag := flag.Bool("nc", false, "No color, if set disables the colors of the results.")
 	sFlag := flag.Bool("s", false, "String format output, displays only the result as a string of 81 digits.")
 	bFlag := flag.Bool("b", false, "Brute-force, it uses brute-force when necessary.")
+	aFlag := flag.Bool("a", false, "All Solutions, displays all solutions instead of just the first one.")
 	flag.UintVar(&maxSol, "ms", CMaxSol, "Max solutions, defines the maximum number of solutions the algorithm will "+
 		"calculate. If this number is reached a \"(+)\" will appear next to the Solutions amount output."+
 		"(automatically activates brute-force [-b])")
@@ -52,6 +52,10 @@ func main() {
 		bruteForce = true
 	}
 
+	if *aFlag {
+		allSolutions = true
+	}
+
 	s, e := GetInput()
 
 	if e {
@@ -63,8 +67,12 @@ func main() {
 		go Processing(done)
 		stats := solver.Solve(&board, bruteForce, maxSol, bruteFTime)
 		done <- true
-		s = solver.Unload(board)
-		PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))
+		if allSolutions {
+			PrintAllSolutions(stats.Solutions(), solver.GivenList(board), solver.Wrong(board))
+		} else {
+			s = solver.Unload(board)
+			PrintSudoku(s, solver.GivenList(board), solver.Wrong(board))
+		}
 		PrintSolved(stats.IsSolved())
 		PrintUnknown(solver.CountUnknown(board))
 		PrintNumSolutions(stats.NumSolutions(), stats.Interrupted())

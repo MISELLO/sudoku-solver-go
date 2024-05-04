@@ -483,8 +483,13 @@ func (s *tStats) BruteForce() bool {
 	return s.bruteForce
 }
 
-// Interrupted tStats method that tells if the calculation of solutions have been truncated.
+// Interrupted tStats method that tells if the calculation of solutions have been truncated
 // (There might be more solutions if yes)
 func (s *tStats) Interrupted() bool {
 	return s.interrupted
+}
+
+// Solutions tStats method that returns a list of all solutions found
+func (s *tStats) Solutions() []string {
+	return s.solutions
 }
