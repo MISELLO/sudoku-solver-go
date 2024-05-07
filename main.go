@@ -32,11 +32,13 @@ func main() {
 	bFlag := flag.Bool("b", false, "Brute-force, it uses brute-force when necessary.")
 	aFlag := flag.Bool("a", false, "All Solutions, displays all solutions instead of just the first one.")
 	flag.UintVar(&maxSol, "ms", CMaxSol, "Max solutions, defines the maximum number of solutions the algorithm will "+
-		"calculate. If this number is reached a \"(+)\" will appear next to the Solutions amount output."+
-		"(automatically activates brute-force [-b])")
+		"calculate. If this number is reached a \"(+)\" will appear next to the Solutions amount output "+
+		"(automatically activates brute-force [-b]).")
 	flag.UintVar(&bruteFTime, "bt", CBruteFTime, "Brute-force time, time in seconds the brute-force algorithm is "+
-		"allowed to run. If this time is reached a \"(+)\" will appear next to the Solutions amount output. "+
-		"(automatically activates brute-force [-b])")
+		"allowed to run. If this time is reached a \"(+)\" will appear next to the Solutions amount output "+
+		"(automatically activates brute-force [-b]).")
+
+	flag.Usage = PrintUsage
 
 	flag.Parse()
 

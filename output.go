@@ -8,7 +8,27 @@ import (
 // PrintUsage prints how to use this command.
 func PrintUsage() {
 	fmt.Println(" USAGE:")
-	fmt.Println("  ./sudoku-solver.exe [sudoku digits]")
+	fmt.Println("  ./sudoku-solver.exe [FLAGS] [INPUT]")
+	fmt.Println()
+	fmt.Println(" FLAGS:")
+	fmt.Println("  -a   All solutions, displays all solutions instead of just the first one.")
+	fmt.Println("  -b   Brute-force, it uses brute-force when necessary.")
+	fmt.Println("  -bt  Brute-force time, time in seconds the brute-force algorithm is " +
+		"allowed to run. If this time is reached a \"(+)\" will appear next to the Solutions amount output " +
+		"(automatically activates brute-force [-b]). (default 60)")
+	fmt.Println("  -ms  Max solutions, defines the maximum number of solutions the algorithm will " +
+		"calculate. If this number is reached a \"(+)\" will appear next to the Solutions amount output." +
+		"(automatically activates brute-force [-b]). (default 10)")
+	fmt.Println("  -nc  No color, if set disables the colors of the results.")
+	fmt.Println("  -s   String format output, displays only the result as a string of 81 digits.")
+	fmt.Println()
+	fmt.Println(" INPUT:")
+	fmt.Println("  Data should be introduced in one of this three ways:")
+	fmt.Println("   * String: A 81 digit string that represents the sudoku in writing order (top to bottom, " +
+		"left to right) using zeroes for the unknown cells.")
+	fmt.Println("   * File:   A text file that contains the sudoku we want to solve (spaces are allowed).")
+	fmt.Println("   * Visual: If no arguments for the sudoku are provided, an empty board will be displayed, " +
+		"fill it manually and press enter.")
 	fmt.Println()
 }
 
