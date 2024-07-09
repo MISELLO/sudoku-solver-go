@@ -26,11 +26,11 @@ The code comes with a Makefile that can be executed with:
 
     make
 
-Alternativelly, you can compile it yourself with:
+Alternatively, you can compile it yourself with:
 
     go build -o sudoku-solver.exe main.go input.go output.go
 
-It is recomended but not mandatory to have installed `gocyclo`, `goimports`, `misspell` and `golint`.
+It is recommended but not mandatory to have installed `gocyclo`, `goimports`, `misspell` and `golint`.
 
 ## Usage
 
