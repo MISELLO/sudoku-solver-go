@@ -61,3 +61,4 @@ There are some more features pending to be implemented
 - Search for solutions with concurrency/parallelism
 - A goroutine that tells how many solutions have been found so far
 - The ability to abort an execution
+- Use the context package for better timeout and cancelling
